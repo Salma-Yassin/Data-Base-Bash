@@ -1,0 +1,32 @@
+#! /usr/bin/bash
+PS3="Choose an Option >>"
+echo $PWD
+select  variable2 in "Create Table" "Drop Table" "Insert Table" "select from Table" "Delet from Table" "Update Table" "List Tables" 
+do
+    case $REPLY in
+        1) # "Create Table"
+            read -p "Enter Table Name: " table_name
+        ;;
+        2) # "Drop Table"
+            echo $variable2
+        ;; 
+        3) 
+        echo $variable2
+        ;;
+        4)
+        echo $variable2
+        ;;
+        5) 
+        echo $variable2
+        ;;
+        6) 
+        echo $variable2
+        ;;
+        7) # "List Tables" 
+            echo "Existing Tables are: "
+            ls -F | grep -v /
+        ;;
+        *)
+        exit
+    esac
+done 
