@@ -1,17 +1,18 @@
 #! /usr/bin/bash
-PS3="Choose an Option >>"
+PS3="Choose an Option >> "
+source regex
 echo $PWD
 select  variable2 in "Create Table" "Drop Table" "Insert Table" "select from Table" "Delet from Table" "Update Table" "List Tables" 
 do
     case $REPLY in
         1) # "Create Table"
             read -p "Enter Table Name: " table_name
-            if [ regex_checker $tablename ]; then
+            if [[ $(regex_checker $tablename) =~ 1 ]]; then
                 if [ -f table_name ];then
                     echo "The table already exists"
                 else 
-                    read -p "Enter number of fields" no_fields 
-                    if [ $no_fields ~= ^[0-9]+$ ];then
+                    read -p "Enter number of fields: " no_fields 
+                    if [[ $no_fields =~ ^[0-9]+$ ]];then
                         echo "Valid number"
                     else
                         echo "Not a valid number of fields "
