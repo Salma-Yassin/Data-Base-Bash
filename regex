@@ -1,11 +1,14 @@
-#! /usr/bin/bash
 export LC_COLLATE=C
 shopt -s extglob
+
 read -p "Please enter your input: " input
-case $input in 
-	+([A-Z]) ) echo "Capital letter" ;;
-	+([a-z]) ) echo "Small letter" ;;
-	+([0-9]) ) echo "Number" ;;
-	+([0-9a-zA-Z]) ) echo "Mixed" ;;
-	*) echo "Nothing" 
-esac
+
+function regex_checker {
+    if [[ ${#1} -le 3 ]] || [[ ${#1} -gt 64 ]] || [[ ! $1  =~ ^[a-zA-Z][a-zA-Z0-9_]*$ ]]; then
+        echo 0
+    else 
+        echo 1
+    fi
+}
+
+regex_checker "$input"
