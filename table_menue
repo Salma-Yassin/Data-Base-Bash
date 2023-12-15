@@ -7,13 +7,16 @@ do
     case $REPLY in
         1) # "Create Table"
             read -p "Enter Table Name: " table_name
-            if [[ $(regex_checker $tablename) =~ 1 ]]; then
+            if (( $(regex_checker $tablename) = 1 )); then
                 if [ -f table_name ];then
                     echo "The table already exists"
                 else 
                     read -p "Enter number of fields: " no_fields 
                     if [[ $no_fields =~ ^[0-9]+$ ]];then
-                        echo "Valid number"
+                        for i in {1..$no_fields}
+                        do
+                            echo "Valid number" $i
+                        done
                     else
                         echo "Not a valid number of fields "
                     fi
