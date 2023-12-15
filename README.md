@@ -1,4 +1,4 @@
 # Data-Base-Bash
 
 A Database Project created using bash scripts
-it has a list of tables ----> updates 
+it has a list of tables ----> updates ----> more updates
