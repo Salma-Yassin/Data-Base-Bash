@@ -1,0 +1,11 @@
+#! /usr/bin/bash
+export LC_COLLATE=C
+shopt -s extglob
+read -p "Please enter your input: " input
+case $input in 
+	+([A-Z]) ) echo "Capital letter" ;;
+	+([a-z]) ) echo "Small letter" ;;
+	+([0-9]) ) echo "Number" ;;
+	+([0-9a-zA-Z]) ) echo "Mixed" ;;
+	*) echo "Nothing" 
+esac
