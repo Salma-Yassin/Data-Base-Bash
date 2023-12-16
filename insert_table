@@ -1,0 +1,50 @@
+#! /usr/bin/bash
+
+num_of_lines=$(awk 'END{print NR}' ./iti1/.meta_table_1)
+fields_types=($(awk -F: '{print $2}' ./iti1/.meta_table_1))
+fields_names=($(awk -F: '{print $1}' ./iti1/.meta_table_1))
+
+for ((i = 1; i <= num_of_lines; i++)); do
+    read -p "Enter value for ${fields_names[$i-1]}: " value
+    if [[ $i == 1 ]]; then
+        while true; do
+            check=$(awk -F: -v value="$value" '{
+                if ($1 == value)
+                { result=0
+                    exit
+                }} END { print result }' ./iti1/table_1)
+            if [[ "$check" == '0' ]]; then
+                read -p "Enter a unique primary key: " value
+            else 
+                break
+            fi
+        done
+        
+        if [[ ${fields_types[$i-1]} == "Integer" ]] ; then
+            if [[ $value =~ ^[0-9]+$ ]];then
+                echo -n $value: >> ./iti1/table_1
+            else
+                echo "Invalid Value"
+            fi    
+        else
+            echo -n $value: >> ./iti1/table_1
+        fi
+    else
+        if [[ ${fields_types[$i-1]} == "Integer" ]] ; then
+            if [[ $value =~ ^[0-9]+$ ]];then
+                echo -n $value: >> ./iti1/table_1
+            else
+                echo "Invalid Value"
+            fi    
+        else
+            if [[ -n "$value" ]];then
+                echo -n $value: >> ./iti1/table_1
+            else 
+                echo yalhwiii
+            fi
+        fi
+    fi
+    
+done
+
+echo -ne "\n" >> ./iti1/table_1

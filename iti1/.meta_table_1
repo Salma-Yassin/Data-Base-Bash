@@ -1,0 +1,5 @@
+id:Integer
+name:Integer
+class:String
+year:String
+no_st:Integer
