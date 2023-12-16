@@ -1,8 +1,26 @@
 #! /usr/bin/bash
+echo $PWD
+num_of_lines=$(awk 'END{print NR}' $2)
+fields_types=($(awk -F: '{print $2}' $2)) #$2 carries the meta file path, so awk operates on it
+fields_names=($(awk -F: '{print $1}' $2))
 
-num_of_lines=$(awk 'END{print NR}' ./iti1/.meta_table_1)
-fields_types=($(awk -F: '{print $2}' ./iti1/.meta_table_1))
-fields_names=($(awk -F: '{print $1}' ./iti1/.meta_table_1))
+function valid_type () {
+    #{fields_types[$i-1]} -> $1
+    #value -> $3
+    #path -> $2
+    temp=$3
+    if [[ $1 == "Integer" ]] ; then
+        while [[ ! $temp =~ ^[0-9]+$ ]]; do
+            read -p "Please enter an integer: " temp
+        done
+        echo -n $temp: >> $2 #./iti1/table_1 -> $3 (path of the table)
+    else
+        while [[ -z "$temp" ]];do
+            read -p "Please enter a non empty value: " temp
+        done
+        echo -n $temp: >> $2
+    fi
+}
 
 for ((i = 1; i <= num_of_lines; i++)); do
     read -p "Enter value for ${fields_names[$i-1]}: " value
@@ -12,39 +30,18 @@ for ((i = 1; i <= num_of_lines; i++)); do
                 if ($1 == value)
                 { result=0
                     exit
-                }} END { print result }' ./iti1/table_1)
-            if [[ "$check" == '0' ]]; then
+                }} END { print result }' $1) #$1 is path of table
+            if [[ "$check" == '0' || -z $value ]]; then
                 read -p "Enter a unique primary key: " value
             else 
                 break
             fi
         done
-        
-        if [[ ${fields_types[$i-1]} == "Integer" ]] ; then
-            if [[ $value =~ ^[0-9]+$ ]];then
-                echo -n $value: >> ./iti1/table_1
-            else
-                echo "Invalid Value"
-            fi    
-        else
-            echo -n $value: >> ./iti1/table_1
-        fi
+        valid_type ${fields_types[$i-1]} $1 $value
     else
-        if [[ ${fields_types[$i-1]} == "Integer" ]] ; then
-            if [[ $value =~ ^[0-9]+$ ]];then
-                echo -n $value: >> ./iti1/table_1
-            else
-                echo "Invalid Value"
-            fi    
-        else
-            if [[ -n "$value" ]];then
-                echo -n $value: >> ./iti1/table_1
-            else 
-                echo yalhwiii
-            fi
-        fi
+        valid_type ${fields_types[$i-1]} $1 $value
     fi
     
 done
 
-echo -ne "\n" >> ./iti1/table_1
+echo -ne "\n" >> $1

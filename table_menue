@@ -22,10 +22,10 @@ do
                             do
                                 case $REPLY in
                                 1) 
-                                    echo "$field_name:$field_type;" >> .meta_$table_name
+                                    echo "$field_name:$field_type" >> .meta_$table_name
                                     break ;;
                                 2)
-                                    echo "$field_name:$field_type;" >> .meta_$table_name
+                                    echo "$field_name:$field_type" >> .meta_$table_name
                                     break ;;
                                 esac
                             done 
@@ -55,6 +55,17 @@ do
         ;; 
         3) # "Insert into Table" 
         echo $variable2
+        echo "Please choose which table to insert into."
+        select option in $(ls -F | grep -v /)
+        do 
+            if [ -n "$option" ]; then
+                source insert_table $option .meta_$option
+            else
+                echo "Invalid selection."
+                break
+            fi
+        done
+        
         ;;
         4)
         echo $variable2
