@@ -3,7 +3,7 @@
 source regex
 echo $PWD
 PS3="Choose an Option >> "
-select  variable2 in "Create Table" "Drop Table" "Insert Table" "select from Table" "Delet from Table" "Update Table" "List Tables" 
+select  variable2 in "Create Table" "Drop Table" "Insert into Table" "select from Table" "Delet from Table" "Update Table" "List Tables" 
 do
     case $REPLY in
         1) # "Create Table"
@@ -41,9 +41,19 @@ do
 
         ;;
         2) # "Drop Table"
+            read -p "Enter Table Name: " table_name
+            if [[ "$(regex_table "$table_name")" == "1" ]]; then 
+                    if [ -f $table_name ];then
+                        rm -i $table_name .meta_$table_name
+                    else 
+                        echo "The table does not exist"
+                    fi 
+            else
+                echo "Not a valid Name"
+            fi
             echo $variable2
         ;; 
-        3) 
+        3) # "Insert into Table" 
         echo $variable2
         ;;
         4)
