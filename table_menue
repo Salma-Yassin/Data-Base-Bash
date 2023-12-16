@@ -70,6 +70,15 @@ do
             ls -F | grep -v /
         ;;
         *)
-        exit
+        echo "Invalid option, you are back to database connection menu"
+        cd ..
+        echo "Please choose which database to connect to."
+        count=0
+        directories=$(ls -F | grep /)
+        for directory in $directories; do
+            ((count=count+1))
+            echo "$count: $directory"
+        done
+        break
     esac
 done 
