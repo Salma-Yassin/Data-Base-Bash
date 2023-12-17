@@ -1,0 +1,71 @@
+#! /usr/bin/bash
+: '
+Select * (done)
+Select by column value
+Select entire column (done)
+Select with a where condition (<>) (Bonus)
+'
+
+#1 data file
+#2 meta file
+fields_types=($(awk -F: '{print $2}' $2)) #$2 carries the meta file path, so awk operates on it
+fields_names=($(awk -F: '{print $1}' $2))
+
+check_validity() {
+    input=$1
+    valid_options=("$@")
+
+    while true; do
+        for option in "${valid_options[@]}"; do
+            if [ "$input" == "$option" ]; then
+                return  
+            fi
+        done
+
+        read -p "Please enter a valid option: " input
+    done
+}
+#$1 -> table data
+#$2 -> meta data
+select option in "Select all" "Select a column" "Select by a column value" "Back to connection menu" "Back to main menu" "Exit"
+do
+case $REPLY in
+        1) #Select all 
+        cat $1
+        source select_table
+        ;;
+        2) #Select entire column
+        : '
+        count=0
+        columns=($(awk -F: '{print $1}' $2))
+        for column in "${columns[@]}"; do
+            ((count=count+1))
+            echo "$count: $column"
+        done '
+        echo "Please choose which column to select." 
+        select column_name in "${fields_names[@]}"; do
+            if [[ $REPLY =~ ^[0-9]+$ && $REPLY -ge 1 && $REPLY -le ${#fields_names[@]} ]]; then
+                selected_column=$(awk -F: -v col="$REPLY" '{print $col}' "$1")
+                echo "$selected_column"
+                source select_table
+                break
+            else
+                echo "Invalid choice. Please enter a valid number."
+            fi
+        done
+        ;;
+        3) #Select by a column value
+        
+        ;;
+        4)
+        source table_menue
+        ;;
+        5)
+        cd ..
+        source main_menu
+        ;;
+        6)
+        exit
+
+esac
+done

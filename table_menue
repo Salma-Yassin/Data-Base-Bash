@@ -62,13 +62,26 @@ do
                 source insert_table $option .meta_$option
             else
                 echo "Invalid selection."
+                source table_menue
                 break
             fi
         done
         
         ;;
-        4)
+        4) #Select from table
         echo $variable2
+        echo $PWD
+        echo "Please choose which table to select from."
+        select option in $(ls -F | grep -v /)
+        do 
+            if [ -n "$option" ]; then
+                source select_table $option .meta_$option
+            else
+                echo "Invalid selection."
+                source table_menue
+                break
+            fi
+        done
         ;;
         5) # Delete from a table 
             echo $variable2
@@ -92,15 +105,9 @@ do
             ls -F | grep -v /
         ;;
         *)
-        echo "Invalid option, you are back to database connection menu"
+        echo "Invalid option, you are back to main menu."
         cd ..
-        echo "Please choose which database to connect to."
-        count=0
-        directories=$(ls -F | grep /)
-        for directory in $directories; do
-            ((count=count+1))
-            echo "$count: $directory"
-        done
+        source main_menu
         break
     esac
 done 

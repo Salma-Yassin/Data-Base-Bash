@@ -45,3 +45,4 @@ for ((i = 1; i <= num_of_lines; i++)); do
 done
 
 echo -ne "\n" >> $1
+source table_menue
