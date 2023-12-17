@@ -92,13 +92,25 @@ do
                     source delete_from_table $option .meta_$option
                 else
                     echo "Invalid selection."
+                    source table_menue
                     break
                 fi
                 PS3="Choose an Option >> "
             done
         ;;
-        6) 
-        echo $variable2
+        6) # update table 
+            echo $variable2
+            echo "Please choose which table to update."
+            select option in $(ls -F | grep -v /)
+            do 
+                if [ -n "$option" ]; then
+                    source update_table $option .meta_$option
+                else
+                    echo "Invalid selection."
+                    source table_menue
+                    break
+                fi
+            done
         ;;
         7) # "List Tables" 
             echo "Existing Tables are: "
