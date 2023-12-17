@@ -49,19 +49,26 @@ do
         done
         ;;
         4) #Connect to DB
-        echo "Please choose which database to connect to."
-        select option in $(ls -F | grep /)
-        do 
-            if [ -n "$option" ]; then
-                echo $PWD
-                cd $option 
-                source table_menue $option
-            else
-                echo "Invalid selection, you are back to main menu."
-                source main_menu
-                break
-            fi
-        done
+        list_db=$(ls -F | grep /)
+        if [[ -n "$list_db" ]]; then
+            echo "Please choose which database to connect to."
+            select option in $(ls -F | grep /)
+            do 
+                if [ -n "$option" ]; then
+                    echo $PWD
+                    cd $option 
+                    source table_menue $option
+                else
+                    echo "Invalid selection, you are back to main menu."
+                    source main_menu
+                    break
+                fi
+            done
+        else 
+            echo "Please create at least one database first."
+            source main_menu
+        fi
+
         ;;
         5) #Else
             echo "Press 5 or anything else to exit."
