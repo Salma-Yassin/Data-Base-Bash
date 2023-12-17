@@ -78,6 +78,7 @@ do
                 source select_table $option .meta_$option
             else
                 echo "Invalid selection."
+                source table_menue
                 break
             fi
         done
