@@ -1,0 +1,69 @@
+#! /usr/bin/bash
+PS3="Choose a delete option >> "
+fields_names=($(awk -F: '{print $1}' $2))
+
+select  variable2 in "Delete by Id" "Delete by Column" "Delete All"
+do
+    case $REPLY in
+        1) # Delete by id 
+            read -p "Enter id value to delete: " delet_value
+            line_number=$(awk -F: -v delet_value="$delet_value" 'BEGIN{line_number=0}{
+                if($1 == delet_value)
+                {
+                    line_number = NR
+                }
+            }END {print line_number}' $1)
+            if [[ $line_number == 0 ]]; then
+                echo "The id you entered does not exist!"
+            else
+                awk -v line_number="$line_number" '{
+                    if(NR != line_number)
+                    {
+                        print $0 
+                    }}' $1 > temp_file && mv temp_file $1
+            fi 
+            
+
+        ;;
+        2) 
+            PS3="Choose a Column to delete: "
+            select column_name in ${fields_names[@]:1}
+            do
+                if [[ $REPLY =~ ^[1-9]$ && $((REPLY+1)) -le ${#fields_names[@]} ]]; then
+                read -p "Enter value to delete: " delete_value
+                line_number=$(awk -F: -v col="$((REPLY+1))" -v delete_value="$delete_value" 'BEGIN{line_number=0}{
+                        if($col == delete_value)
+                        {
+                            line_number = NR
+                            exit
+                        }}END {print line_number}' $1)
+                    if [[ $line_number == 0 ]]; then
+                        echo "The value you entered does not exist!"
+                    else
+                        awk -F: -v col="$((REPLY+1))" -v delete_value="$delete_value" '{
+                            if($col != delete_value)
+                            {
+                                print $0
+                            }
+                        }' $1 > temp_file && mv temp_file $1
+                        echo "Matched entries have been deleted!"     
+                    fi 
+                else
+                    break
+                fi
+            done
+            PS3="Choose a delete option >> "
+        ;;
+        3) # Delete All 
+            read -p "Sure you want to delete all entries?[Y/N] " delete_value
+            if [[ $delete_value =~ [Yy] ]]; then
+                echo -n > $1
+                echo "All entries have been deleted! "
+            else
+                echo "Aborted!"
+            fi
+            ;;
+        *)
+            break;;
+    esac
+done 
