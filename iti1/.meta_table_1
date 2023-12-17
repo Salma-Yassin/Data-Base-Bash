@@ -1,0 +1,4 @@
+id:Integer
+name:String
+class:String
+year:Integer

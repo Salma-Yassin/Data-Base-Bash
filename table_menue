@@ -70,8 +70,19 @@ do
         4)
         echo $variable2
         ;;
-        5) 
-        echo $variable2
+        5) # Delete from a table 
+            echo $variable2
+            echo "Please choose which table to delete from."
+            select option in $(ls -F | grep -v /)
+            do 
+                if [ -n "$option" ]; then
+                    source delete_from_table $option .meta_$option
+                else
+                    echo "Invalid selection."
+                    break
+                fi
+                PS3="Choose an Option >> "
+            done
         ;;
         6) 
         echo $variable2
