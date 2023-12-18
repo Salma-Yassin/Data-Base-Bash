@@ -29,12 +29,12 @@ do
         do
             if [ -n "$option" ]; then
                 read -p "You selected: $option. Are you sure you want to delete the database? y/n" answer
-                if [[ "$answer" == "y" ]]; then
+                if [[ "$answer" =~ ^[yY]$ ]]; then
                     rm -r "$option"
                     echo "Database deleted successfully."
                     source main_menu
                     break  # Exit the loop after a valid selection
-                elif [[ "$answer" == "n" ]]; then
+                elif [[ "$answer" =~ ^[nN]$ ]]; then
                     echo "No database deleted."
                     source main_menu
                     break

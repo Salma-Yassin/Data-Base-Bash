@@ -51,6 +51,7 @@ case $REPLY in
                 break
             else
                 echo "Invalid choice. Please enter a valid number."
+
             fi
         done
         ;;
@@ -74,11 +75,13 @@ case $REPLY in
                                     print $0
                                 }
                             }' $1 
-                            
+                        break
                         fi 
                     else
+                        echo "Invalid choice. Please enter a valid number."
                         break
                     fi
+                    source select_table
                 done
         ;;
         4)
@@ -90,6 +93,8 @@ case $REPLY in
         ;;
         6)
         exit
-
+        ;;
+        *)
+        source select_table
 esac
 done

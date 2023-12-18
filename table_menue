@@ -3,7 +3,7 @@
 source regex
 echo $PWD
 PS3="Choose an Option >> "
-select  variable2 in "Create Table" "Drop Table" "Insert into Table" "select from Table" "Delet from Table" "Update Table" "List Tables" 
+select  variable2 in "Create Table" "Drop Table" "Insert into Table" "select from Table" "Delete from Table" "Update Table" "List Tables" "Back to main menu" 
 do
     case $REPLY in
         1) # "Create Table"
@@ -39,12 +39,15 @@ do
                             done 
                         done
                         PS3="Choose an Option >> "
+                        source table_menue
                     else
                         echo "Not a valid number of fields "
+                        source table_menue
                     fi
                 fi
             else
                 echo "Not a Valid Table Name"
+                source table_menue
             fi 
 
         ;;
@@ -53,13 +56,16 @@ do
             if [[ "$(regex_table "$table_name")" == "1" ]]; then 
                     if [ -f $table_name ];then
                         rm -i $table_name .meta_$table_name
+                        echo "Table deleted"
+                        source table_menue
                     else 
                         echo "The table does not exist"
+                        source table_menue
                     fi 
             else
                 echo "Not a valid Name"
+                source table_menue
             fi
-            echo $variable2
         ;; 
         3) # "Insert into Table" 
         echo $variable2
@@ -74,7 +80,7 @@ do
                 break
             fi
         done
-        
+        source table_menue
         ;;
         4) #Select from table
         echo $variable2
@@ -123,6 +129,12 @@ do
         7) # "List Tables" 
             echo "Existing Tables are: "
             ls -F | grep -v /
+            source table_menue
+        ;;
+        8) #Back to main menu
+        cd .. 
+        echo $PWD
+        source main_menu 
         ;;
         *)
         echo "Invalid option, you are back to main menu."
