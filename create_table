@@ -3,7 +3,17 @@
 source regex
 fields=()
 read -p "Enter Table Name: " table_name
-if [[ "$(regex_table "$table_name")" == "1" ]]; then 
+if [[ "$(regex_table "$table_name")" == "1" ]]; then
+    if [[ "$table_name" =~ [[:space:]] ]]; then
+        read -p "Name cannot contain whitespaces, would you like to replace them with underscores (_)? y/n " ans
+        if [[ ! "$ans" =~ ^[yY]$ ]]; then
+            echo "Back to connection menu..."
+            source table_menue
+        else 
+            table_name=$(echo "$table_name" | tr -s ' ' | sed 's/ /_/g') 
+            echo "Table successfully created with the name $table_name"
+        fi
+    fi
     if [ -f $table_name ];then
         echo "The table already exists"
     else 
@@ -29,18 +39,22 @@ if [[ "$(regex_table "$table_name")" == "1" ]]; then
                     case $REPLY in
                     1) 
                         echo "$field_name:$field_type" >> .meta_$table_name
-                        break ;;
+                        echo "Table created!"
+                        source table_menue ;;
                     2)
                         echo "$field_name:$field_type" >> .meta_$table_name
-                        break ;;
+                        echo "Table created!"
+                        source table_menue ;;
                     esac
                 done 
             done
             PS3="Choose an Option >> "
         else
             echo "Not a valid number of fields "
+            source table_menue
         fi
     fi
 else
     echo "Not a Valid Table Name"
+    source table_menue
 fi 

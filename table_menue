@@ -9,20 +9,18 @@ do
             source create_table
         ;;
         2) # "Drop Table"
-            read -p "Enter Table Name: " table_name
-            if [[ "$(regex_table "$table_name")" == "1" ]]; then 
-                    if [ -f $table_name ];then
-                        rm -i $table_name .meta_$table_name
-                        echo "Table deleted"
-                        source table_menue
-                    else 
-                        echo "The table does not exist"
-                        source table_menue
-                    fi 
-            else
-                echo "Not a valid Name"
-                source table_menue
-            fi
+            select option in $(ls -F | grep -v /); do
+                table_name="$option"
+                read -p "Do you want to delete $table_name (y/n)? " ans
+                if [[ "$ans" =~ ^[yY]$ ]]; then
+                    rm $table_name .meta_$table_name
+                    echo "Table deleted"
+                    source table_menue
+                else 
+                    echo "Nothing deleted."
+                    source table_menue
+                fi
+            done
         ;; 
         3) # "Insert into Table" 
         echo $variable2
@@ -68,6 +66,7 @@ do
                 fi
                 PS3="Choose an Option >> "
             done
+            source table_menue
         ;;
         6) # update table 
             echo $variable2
