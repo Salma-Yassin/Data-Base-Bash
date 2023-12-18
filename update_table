@@ -9,7 +9,7 @@ line_number=$(awk -F: -v row_value="$row_value" 'BEGIN{line_number=0}{
             }END {print line_number}' $1)
 if [[ $line_number == 0 ]]; then
                 echo "The id you entered does not exist!"
-                source update_talble
+                source update_table
 else
    select column_name in ${fields_names[@]:1}
             do
