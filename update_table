@@ -1,5 +1,24 @@
 #! /usr/bin/bash
 fields_names=($(awk -F: '{print $1}' $2))
+fields_types=($(awk -F: '{print $2}' $2))
+
+function valid_update_type () {
+    #{fields_types[$i-1]} -> $1
+    #value -> $3
+    #path -> $2
+    temp=$3
+    if [[ $1 == "Integer" ]] ; then
+        while [[ ! $temp =~ ^[0-9]+$ ]]; do
+            read -p "Please enter an integer: " temp
+        done
+    else
+        while [[ -z "$temp" ]];do
+            read -p "Please enter a non empty value: " temp
+        done
+    fi
+    echo $temp
+}
+
 read -p "Enter the primary key for the row you want to update: " row_value
 line_number=$(awk -F: -v row_value="$row_value" 'BEGIN{line_number=0}{
                 if($1 == row_value)
@@ -11,22 +30,39 @@ if [[ $line_number == 0 ]]; then
                 echo "The id you entered does not exist!"
                 source update_table
 else
-   select column_name in ${fields_names[@]:1}
+   select column_name in ${fields_names[@]}
             do
-                if [[ $REPLY =~ ^[1-9]$ && $((REPLY+1)) -le ${#fields_names[@]} ]]; then
+                if [[ $REPLY =~ ^[1-9]$ && $((REPLY)) -le ${#fields_names[@]} ]]; then
                     read -p "Enter new value: " new_value
-                
-                        awk -F: -v OFS=: -v col="$((REPLY+1))" -v line_number="$line_number" -v new_value="$new_value" '{
-                            if(NR != line_number)
-                            {
-                                print $0 
-                            }
-                            else{
-                                $col=new_value
-                                print $0
-                            }}' $1 > temp_file && mv temp_file $1
-                else
-                    break
+
+                    if [[ $REPLY == 1 ]]; then
+                        while true; do
+                            check=$(awk -F: -v value="$new_value" '{
+                                if ($1 == value)
+                                { result=0
+                                    exit
+                                }} END { print result }' $1) #$1 is path of table
+                            if [[ "$check" == '0' || -z $new_value ]]; then
+                                read -p "Enter a unique primary key: " new_value
+                            else 
+                                break
+                            fi
+                        done
+                        new_value=$(valid_update_type ${fields_types[$REPLY-1]} $1 $new_value)
+                    else
+                        new_value=$(valid_update_type ${fields_types[$REPLY-1]} $1 $new_value)
+                    fi
+                                
+                    awk -F: -v OFS=: -v col="$((REPLY))" -v line_number="$line_number" -v new_value="$new_value" '{
+                        if(NR != line_number)
+                        {
+                            print $0 
+                        }
+                        else{
+                            $col=new_value
+                            print $0
+                        }}' $1 > temp_file && mv temp_file $1
                 fi
+                break
             done
 fi 
