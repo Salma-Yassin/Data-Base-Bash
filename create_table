@@ -1,0 +1,46 @@
+#! /usr/bin/bashs
+
+source regex
+fields=()
+read -p "Enter Table Name: " table_name
+if [[ "$(regex_table "$table_name")" == "1" ]]; then 
+    if [ -f $table_name ];then
+        echo "The table already exists"
+    else 
+        read -p "Enter number of fields: " no_fields 
+
+        if [[ $no_fields =~ ^[0-9]+$ ]];then
+            touch $table_name .meta_$table_name
+            for ((i = 1; i <= no_fields; i++)); do
+                PS3="Field Type: "
+                read -p "Enter field $i: " field_name
+                while [[ "$(regex_table "$field_name")" == "0" ]]; do
+                    read -p "Enter a valid field name: " field_name
+                done
+                for field in ${fields[@]}; do
+                    while [[ $field == $field_name ]]; do
+                        read -p "Column with this name already exists. Please enter a unique name: " field_name
+                    done
+                done
+                fields+=($field_name)
+                echo "${fields[@]}"
+                select field_type in "String" "Integer"
+                do
+                    case $REPLY in
+                    1) 
+                        echo "$field_name:$field_type" >> .meta_$table_name
+                        break ;;
+                    2)
+                        echo "$field_name:$field_type" >> .meta_$table_name
+                        break ;;
+                    esac
+                done 
+            done
+            PS3="Choose an Option >> "
+        else
+            echo "Not a valid number of fields "
+        fi
+    fi
+else
+    echo "Not a Valid Table Name"
+fi 
