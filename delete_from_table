@@ -2,7 +2,7 @@
 PS3="Choose a delete option >> "
 fields_names=($(awk -F: '{print $1}' $2))
 
-select  variable2 in "Delete by Id" "Delete by Column" "Delete All"
+select  variable2 in "Delete by Id" "Delete by Column" "Delete All" "Back to connection menu" "Back to main menu"
 do
     case $REPLY in
         1) # Delete by id 
@@ -15,16 +15,15 @@ do
             }END {print line_number}' $1)
             if [[ $line_number == 0 ]]; then
                 echo "The id you entered does not exist!"
-                source delete_from_table
             else
                 awk -v line_number="$line_number" '{
                     if(NR != line_number)
                     {
                         print $0 
                     }}' $1 > temp_file && mv temp_file $1
+                echo "The record has been deleted."
             fi 
-            
-
+            source delete_from_table
         ;;
         2) 
             PS3="Choose a Column to delete: "
@@ -47,10 +46,12 @@ do
                                 print $0
                             }
                         }' $1 > temp_file && mv temp_file $1
-                        echo "Matched entries have been deleted!"     
+                        echo "Matched entries have been deleted!"
+                        source delete_from_table     
                     fi 
                 else
-                    break
+                    source delete_from_table
+
                 fi
             done
             PS3="Choose a delete option >> "
@@ -60,11 +61,22 @@ do
             if [[ $delete_value =~ [Yy] ]]; then
                 echo -n > $1
                 echo "All entries have been deleted! "
+                source delete_from_table
             else
                 echo "Aborted!"
+                source delete_from_table
             fi
             ;;
+        4) #Back to connection menu
+        source table_menue
+        ;;
+        5) #Back to main menu
+        cd ..
+        echo $PWD
+        source main_menu
+        ;;
         *)
-            source table_menue;;
+        source table_menue
+        ;;
     esac
 done 

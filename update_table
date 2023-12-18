@@ -19,7 +19,10 @@ function valid_update_type () {
     echo $temp
 }
 
-read -p "Enter the primary key for the row you want to update: " row_value
+read -p "Enter the primary key for the row you want to update, or press q to exit: " row_value
+if [[ $row_value =~ ^[qQ] ]]; then 
+    source table_menue
+fi
 line_number=$(awk -F: -v row_value="$row_value" 'BEGIN{line_number=0}{
                 if($1 == row_value)
                 {
@@ -62,6 +65,8 @@ else
                             $col=new_value
                             print $0
                         }}' $1 > temp_file && mv temp_file $1
+                        echo "Updated!"
+                        source table_menue
                 fi
                 break
             done

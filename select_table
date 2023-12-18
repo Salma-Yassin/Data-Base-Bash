@@ -75,11 +75,11 @@ case $REPLY in
                                     print $0
                                 }
                             }' $1 
-                        break
+                        source select_table
                         fi 
                     else
                         echo "Invalid choice. Please enter a valid number."
-                        break
+                        source select_table
                     fi
                     source select_table
                 done
