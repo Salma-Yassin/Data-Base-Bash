@@ -78,11 +78,11 @@ case $REPLY in
                         source select_table
                         fi 
                     else
-                        echo "Invalid choice. Please enter a valid number."
+                        echo "Invalid choice."
                         source select_table
                     fi
                     source select_table
-                done
+        done
         ;;
         4)
         source table_menue

@@ -1,6 +1,13 @@
 #! /usr/bin/bash
 source regex
-
+: '
+if [ -d $HOME/.MyBashDB ]  ; then  
+    cd $HOME/.MyBashDB 
+else 
+    mkdir $HOME/.MyBashDB
+    cd $HOME/.MyBashDB 
+fi
+'
 PS3="Choose an option from the menu >>"
 select option in "Create DB" "List DB" "Drop DB" "Connect to DB" "Press 5 or anything else to exit"
 do
