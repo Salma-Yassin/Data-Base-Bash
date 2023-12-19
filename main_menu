@@ -9,51 +9,73 @@ else
 fi
 
 PS3="Choose an option from the menu >>"
-select option in "Create DB" "List DB" "Drop DB" "Connect to DB" "Press 5 or anything else to exit"
+select option in "Create DB" "List DB" "Drop DB" "Connect to DB" "Press 5 or any key to exit"
 do
     case $REPLY in
         1) #Create DB
-            read -p " Please Enter DB Name : " name
+            read -p "Please Enter DB Name : " name
             while [[ "$(regex_db "$name")" == "0" ]]; do
                 read -p "Please enter a valid name. Database names should only start with a letter, can only contain alphanumeric chars or _, length should be between 2 and 64 chars." name
             done
+
+            if [[ "$name" =~ [[:space:]] ]]; then
+                read -p "Name cannot contain whitespaces, would you like to replace them with underscores (_)? y/n " ans
+                if [[ ! "$ans" =~ ^[yY]$ ]]; then
+                    echo "Aborted!"
+                    source main_menu
+                fi
+            fi 
+            name=$(echo "$name" | tr -s ' ' | sed 's/ /_/g') 
             if [[ -e $name ]]; then
-                    echo "A database with this name already exists."
-                    source main_menu
-                else 
-                    echo "Database $name created"
-                    mkdir $name
-                    source main_menu
-            fi
+                echo "A database with this name already exists."
+                source main_menu
+            else 
+                echo "Database $name created"
+                mkdir $name
+                source main_menu
+            fi          
         ;;
         2) #List DB
-        ls -F | grep /
-        source main_menu
+            output=$(ls -F | grep '/')
+            if [ -n "$output" ]; then
+                echo "Existing Databases are: "
+                echo "$output"
+            else
+                echo "No Databases created!"
+            fi
+            source main_menu
         ;;
         3) #Drop DB
-        echo "Please choose which database to drop:"
-        select option in $(ls -F | grep /)
-        do
-            if [ -n "$option" ]; then
-                read -p "You selected: $option. Are you sure you want to delete the database? y/n" answer
-                if [[ "$answer" =~ ^[yY]$ ]]; then
-                    rm -r "$option"
-                    echo "Database deleted successfully."
-                    source main_menu
-                    break  # Exit the loop after a valid selection
-                elif [[ "$answer" =~ ^[nN]$ ]]; then
-                    echo "No database deleted."
-                    source main_menu
-                    break
-                else 
-                echo "Invalid selection."
-                source main_menu
-                fi
+            output=$(ls -F | grep '/')
+            if [ -n "$output" ]; then
+                echo "Please choose which database to drop:"
+                select option in $(ls -F | grep /)
+                do
+                    if [ -n "$option" ]; then
+                        read -p "You selected: $option. Are you sure you want to delete the database? y/n" answer
+                        if [[ "$answer" =~ ^[yY]$ ]]; then
+                            rm -r "$option"
+                            echo "Database deleted successfully."
+                            source main_menu
+                            break  # Exit the loop after a valid selection
+                        elif [[ "$answer" =~ ^[nN]$ ]]; then
+                            echo "No database deleted."
+                            source main_menu
+                            break
+                        else 
+                        echo "Invalid selection."
+                        source main_menu
+                        fi
+                    else
+                        echo "Invalid selection."
+                        source main_menu
+                    fi
+                done
             else
-                echo "Invalid selection."
+                echo "No Databases created!"
                 source main_menu
             fi
-        done
+        
         ;;
         4) #Connect to DB
         list_db=$(ls -F | grep /)
@@ -78,7 +100,6 @@ do
 
         ;;
         5) #Else
-            echo "Press 5 or anything else to exit."
             exit
         ;;
         *)

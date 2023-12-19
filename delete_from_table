@@ -46,12 +46,11 @@ do
                                 print $0
                             }
                         }' $1 > temp_file && mv temp_file $1
-                        echo "Matched entries have been deleted!"
-                        source delete_from_table     
+                        echo "Matched entries have been deleted!"     
                     fi 
+                    source delete_from_table
                 else
                     source delete_from_table
-
                 fi
             done
             PS3="Choose a delete option >> "

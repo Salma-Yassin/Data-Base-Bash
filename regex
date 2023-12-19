@@ -2,7 +2,7 @@ export LC_COLLATE=C
 shopt -s extglob
 
 function regex_db {
-    if [[ ${#1} -gt 64 ]] || [[ ! "$1"  =~ ^[a-zA-Z][a-zA-Z0-9_]+$ ]]; then
+    if [[ ${#1} -gt 64 ]] || [[ ! "$1"  =~ ^[a-zA-Z][a-zA-Z0-9_[:space:]]+$ ]]; then
         echo 0
     else 
         echo 1

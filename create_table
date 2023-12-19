@@ -11,11 +11,12 @@ if [[ "$(regex_table "$table_name")" == "1" ]]; then
             source table_menue
         else 
             table_name=$(echo "$table_name" | tr -s ' ' | sed 's/ /_/g') 
-            echo "Table successfully created with the name $table_name"
+            echo "Table with the name $table_name will be created"
         fi
     fi
     if [ -f $table_name ];then
         echo "The table already exists"
+        echo "Aborted! Back to menu"
     else 
         read -p "Enter number of fields: " no_fields 
 
@@ -27,33 +28,46 @@ if [[ "$(regex_table "$table_name")" == "1" ]]; then
                 while [[ "$(regex_table "$field_name")" == "0" ]]; do
                     read -p "Enter a valid field name: " field_name
                 done
+                if [[ "$field_name" =~ [[:space:]] ]]; then
+                    read -p "Name cannot contain whitespaces, would you like to replace them with underscores (_)? y/n " ans
+                    if [[ ! "$ans" =~ ^[yY]$ ]]; then
+                        rm $table_name .meta_$table_name
+                        echo "Aborted! Back to menu"
+                        source table_menue
+                    else 
+                        field_name=$(echo "$field_name" | tr -s ' ' | sed 's/ /_/g') 
+                    fi
+                fi
                 for field in ${fields[@]}; do
                     while [[ $field == $field_name ]]; do
                         read -p "Column with this name already exists. Please enter a unique name: " field_name
                     done
                 done
                 fields+=($field_name)
-                echo "${fields[@]}"
+                # echo "${fields[@]}"
                 select field_type in "String" "Integer"
                 do
                     case $REPLY in
                     1) 
                         echo "$field_name:$field_type" >> .meta_$table_name
-                        echo "Table created!";;
+                        break;;
                     2)
                         echo "$field_name:$field_type" >> .meta_$table_name
-                        echo "Table created!";;
+                        break;;
                     esac
                 done 
             done
-            source table_menue ;;
-            PS3="Choose an Option >> "
+            echo "Table created!"
+            source table_menue
+            # PS3="Choose an Option >> "
         else
             echo "Not a valid number of fields "
+            echo "Aborted! Back to menu"
             source table_menue
         fi
     fi
 else
     echo "Not a Valid Table Name"
+    echo "Aborted! Back to menu"
     source table_menue
 fi 
