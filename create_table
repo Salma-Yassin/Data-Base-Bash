@@ -39,15 +39,14 @@ if [[ "$(regex_table "$table_name")" == "1" ]]; then
                     case $REPLY in
                     1) 
                         echo "$field_name:$field_type" >> .meta_$table_name
-                        echo "Table created!"
-                        source table_menue ;;
+                        echo "Table created!";;
                     2)
                         echo "$field_name:$field_type" >> .meta_$table_name
-                        echo "Table created!"
-                        source table_menue ;;
+                        echo "Table created!";;
                     esac
                 done 
             done
+            source table_menue ;;
             PS3="Choose an Option >> "
         else
             echo "Not a valid number of fields "
