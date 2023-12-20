@@ -51,9 +51,9 @@ else
                                 break
                             fi
                         done
-                        new_value=$(valid_update_type ${fields_types[$REPLY-1]} $1 $new_value)
+                        new_value=$(valid_update_type ${fields_types[$REPLY-1]} $1 "$new_value")
                     else
-                        new_value=$(valid_update_type ${fields_types[$REPLY-1]} $1 $new_value)
+                        new_value=$(valid_update_type ${fields_types[$REPLY-1]} $1 "$new_value")
                     fi
                                 
                     awk -F: -v OFS=: -v col="$((REPLY))" -v line_number="$line_number" -v new_value="$new_value" '{

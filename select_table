@@ -69,7 +69,8 @@ case $REPLY in
                         if [[ $line_number == 0 ]]; then
                             echo "The value you entered does not exist!"
                         else
-                            awk -F: -v col="$((REPLY))" -v select_value="$select_value" '{
+                            awk -F: -v col="$((REPLY))" -v select_value="$select_value" '
+                            {
                                 if($col == select_value)
                                 {
                                     print $0

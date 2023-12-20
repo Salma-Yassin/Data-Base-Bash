@@ -2,7 +2,7 @@
 PS3="Choose a delete option >> "
 fields_names=($(awk -F: '{print $1}' $2))
 
-select  variable2 in "Delete by Id" "Delete by Column" "Delete All" "Back to connection menu" "Back to main menu"
+select  variable2 in "Delete by Id" "Delete by a Column Value" "Drop a Column" "Delete All" "Back to connection menu" "Back to main menu"
 do
     case $REPLY in
         1) # Delete by id 
@@ -25,8 +25,8 @@ do
             fi 
             source delete_from_table
         ;;
-        2) 
-            PS3="Choose a Column to delete: "
+        2) #Delete by a column value
+            PS3="Choose a Column to delete from: "
             select column_name in ${fields_names[@]:1}
             do
                 if [[ $REPLY =~ ^[1-9]$ && $((REPLY+1)) -le ${#fields_names[@]} ]]; then
@@ -55,7 +55,35 @@ do
             done
             PS3="Choose a delete option >> "
         ;;
-        3) # Delete All 
+        3) #Drop a column
+        PS3="Choose a Column to delete from: "
+            select column_name in ${fields_names[@]:1}
+            do
+                if [[ $REPLY =~ ^[1-9]$ && $((REPLY+1)) -le ${#fields_names[@]} ]]; then
+                    if [ -n "$column_name" ]; then
+                        awk -F: -v OFS=: -v col="$((REPLY+1))" '{
+                            $col=""
+                            for (i=col; i<NF; i++) {
+                                $i=$(i+1)
+                            }
+                            NF--
+                            print $0
+                        }' "$1" > temp_file && mv temp_file "$1"
+                        awk -v line_number="$((REPLY+1))" '{
+                            if(NR != line_number)
+                            {
+                                print $0 
+                            }}' $2 > temp_file && mv temp_file $2
+                        echo "The column has been dropped."
+                        source delete_from_table
+                    fi
+                else
+                    source delete_from_table
+                fi
+            done
+            PS3="Choose a delete option >> "
+        ;;
+        4) # Delete All 
             read -p "Sure you want to delete all entries?[Y/N] " delete_value
             if [[ $delete_value =~ [Yy] ]]; then
                 echo -n > $1
@@ -66,10 +94,10 @@ do
                 source delete_from_table
             fi
             ;;
-        4) #Back to connection menu
+        5) #Back to connection menu
         source table_menue
         ;;
-        5) #Back to main menu
+        6) #Back to main menu
         cd ..
         echo $PWD
         source main_menu

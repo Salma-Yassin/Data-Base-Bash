@@ -16,7 +16,7 @@ function valid_type () {
         echo -n $temp: >> $2 #./iti1/table_1 -> $3 (path of the table)
     else
         while [[ -z "$temp" ]];do
-            read -p "Please enter a non empty value: " temp
+            read -p "Value cannot be empty, please enter a new value: " temp
         done
         echo -n $temp: >> $2
     fi
@@ -37,9 +37,9 @@ for ((i = 1; i <= num_of_lines; i++)); do
                 break
             fi
         done
-        valid_type ${fields_types[$i-1]} $1 $value
+        valid_type ${fields_types[$i-1]} $1 "$value"
     else
-        valid_type ${fields_types[$i-1]} $1 $value
+        valid_type ${fields_types[$i-1]} $1 "$value"
     fi
     
 done
