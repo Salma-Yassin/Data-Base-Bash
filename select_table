@@ -31,6 +31,7 @@ select option in "Select all" "Select a column" "Select by a column value" "Back
 do
 case $REPLY in
         1) #Select all 
+        echo ${fields_names[@]} 
         cat $1
         source select_table
         ;;
@@ -46,6 +47,7 @@ case $REPLY in
         select column_name in "${fields_names[@]}"; do
             if [[ $REPLY =~ ^[0-9]+$ && $REPLY -ge 1 && $REPLY -le ${#fields_names[@]} ]]; then
                 selected_column=$(awk -F: -v col="$REPLY" '{print $col}' "$1")
+                echo "${fields_names[$((REPLY-1))]}"
                 echo "$selected_column"
                 source select_table
                 break
@@ -69,6 +71,7 @@ case $REPLY in
                         if [[ $line_number == 0 ]]; then
                             echo "The value you entered does not exist!"
                         else
+                            echo ${fields_names[@]} 
                             awk -F: -v col="$((REPLY))" -v select_value="$select_value" '
                             {
                                 if($col == select_value)
