@@ -1,6 +1,6 @@
 # Data-Base-Bash
 
-A Database Project created using bash scripts.
+A Database Engine created using bash scripts.
 
 To run:
 
