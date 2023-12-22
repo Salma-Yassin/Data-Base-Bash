@@ -1,5 +1,4 @@
 #! /usr/bin/bash
-echo $PWD
 num_of_lines=$(awk 'END{print NR}' $2)
 fields_types=($(awk -F: '{print $2}' $2)) #$2 carries the meta file path, so awk operates on it
 fields_names=($(awk -F: '{print $1}' $2))

@@ -99,7 +99,6 @@ do
         ;;
         6) #Back to main menu
         cd ..
-        echo $PWD
         source main_menu
         ;;
         *)

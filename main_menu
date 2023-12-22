@@ -84,7 +84,6 @@ do
             select option in $(ls -F | grep /)
             do 
                 if [ -n "$option" ]; then
-                    echo $PWD
                     cd $option 
                     source table_menue $option
                 else

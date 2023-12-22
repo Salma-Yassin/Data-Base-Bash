@@ -1,8 +1,10 @@
 # Data-Base-Bash
 
-A Database Project created using bash scripts
+A Database Project created using bash scripts.
 
-Hello Salma! It's Laila. :D
+To run:
+-Please add project folder path to environment variables.
 
-it has a list of tables 
-- In creating a table, the first field is going to be the primary key.
+-please run the command: 
+
+main_menu

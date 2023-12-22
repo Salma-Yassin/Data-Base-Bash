@@ -41,6 +41,16 @@ if [[ "$(regex_table "$table_name")" == "1" ]]; then
                 for field in ${fields[@]}; do
                     while [[ $field == $field_name ]]; do
                         read -p "Column with this name already exists. Please enter a unique name: " field_name
+                        if [[ "$field_name" =~ [[:space:]] ]]; then
+                            read -p "Name cannot contain whitespaces, would you like to replace them with underscores (_)? y/n " ans
+                            if [[ ! "$ans" =~ ^[yY]$ ]]; then
+                                rm $table_name .meta_$table_name
+                                echo "Aborted! Back to menu"
+                                source table_menue
+                            else 
+                                field_name=$(echo "$field_name" | tr -s ' ' | sed 's/ /_/g') 
+                            fi
+                        fi
                     done
                 done
                 fields+=($field_name)

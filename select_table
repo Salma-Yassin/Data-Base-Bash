@@ -31,29 +31,32 @@ select option in "Select all" "Select a column" "Select by a column value" "Back
 do
 case $REPLY in
         1) #Select all 
-        echo ${fields_names[@]} 
-        cat $1
-        source select_table
+        if [ -s "$1" ]; then
+            echo "${fields_names[@]}"
+            cat "$1"
+            source select_table
+        else
+            echo "Table has no entries"
+            source select_table
+
+        fi
         ;;
         2) #Select entire column
-        : '
-        count=0
-        columns=($(awk -F: '{print $1}' $2))
-        for column in "${columns[@]}"; do
-            ((count=count+1))
-            echo "$count: $column"
-        done '
         echo "Please choose which column to select." 
         select column_name in "${fields_names[@]}"; do
             if [[ $REPLY =~ ^[0-9]+$ && $REPLY -ge 1 && $REPLY -le ${#fields_names[@]} ]]; then
                 selected_column=$(awk -F: -v col="$REPLY" '{print $col}' "$1")
-                echo "${fields_names[$((REPLY-1))]}"
-                echo "$selected_column"
+            if [ -z "$selected_column" ]; then
+                echo "Table has no entries."
                 source select_table
-                break
+                else
+                    echo "${fields_names[$((REPLY-1))]}"
+                    echo "$selected_column"
+                    source select_table
+                    break
+                fi
             else
                 echo "Invalid choice. Please enter a valid number."
-
             fi
         done
         ;;

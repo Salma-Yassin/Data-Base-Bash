@@ -1,6 +1,4 @@
 #! /usr/bin/bash
-
-echo $PWD
 PS3="Choose an Option >> "
 select  variable2 in "Create Table" "Drop Table" "Insert into Table" "select from Table" "Delete from Table" "Update Table" "List Tables" "Back to main menu" 
 do
@@ -126,7 +124,6 @@ do
         ;;
         8) #Back to main menu
             cd .. 
-            echo $PWD
             source main_menu 
         ;;
         *)
