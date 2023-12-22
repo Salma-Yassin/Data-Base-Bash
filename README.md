@@ -6,6 +6,6 @@ To run:
 
 -Please add project folder path to environment variables.
 
--please run the command: 
+-Run the command: 
 
 main_menu
