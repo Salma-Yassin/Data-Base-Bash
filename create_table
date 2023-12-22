@@ -17,6 +17,7 @@ if [[ "$(regex_table "$table_name")" == "1" ]]; then
     if [ -f $table_name ];then
         echo "The table already exists"
         echo "Aborted! Back to menu"
+        source table_menue
     else 
         read -p "Enter number of fields: " no_fields 
 
