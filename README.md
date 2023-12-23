@@ -2,7 +2,7 @@
 
 A Database Engine created using bash scripts.
 
-To run:
+## To run:
 
 - Please add the project folder path to the environment variables.
 
