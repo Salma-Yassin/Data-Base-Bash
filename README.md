@@ -26,13 +26,13 @@ To run:
    - For each field (Column), it takes the name of the field and checks that it is unique inside this table, the name has to be two characters at least and start with a letter.
    - For each field, it asks for the datatype: String or Integer. It does not allow the user to create a table without properly setting these options.
    - The first field created is the primary key and the unique constraint is applied to this field.
-3) Drop Table:
+2) Drop Table:
    - it shows the user a list of existing databases to delete, and delete the chosen table, it asks for user confirmation to avoid deletion by mistake.	If the user chooses an option that does not exist in the list, it will show an Invalid Option.        
-5) Insert into Table 
+3) Insert into Table 
     - It shows a list of existing tables for the user to choose from and handles invalid user selection.
     - Before each insertion, it checks the primary key constraint for the first field. 
     - Before each insertion, it checks that all integer fields have numeric values and that all string fields have non-empty values.
-7) select from Table
+4) select from Table
    - It lists tables inside the database for the user to choose from and then shows the next menu:
      1) Select all: shows column names and all existing records.		    
      2) Select a column: shows a list of column names for the user to choose from and when the user chooses a valid option it shows all values inside the corresponding column.	    
@@ -40,7 +40,7 @@ To run:
      4) Back to connection menu
      5) Back to main menu
      6) Exit
-9) Delete from Table
+5) Delete from Table
     - It lists tables inside the database for the user to choose from and then shows the next menu:
       1) Delete by Id: takes the value for the primary key to delete the whole record. If it does not exist, it tells the user that the id does not exist.	    
       2) Delete by a Column Value: 
@@ -49,7 +49,8 @@ To run:
       5) Back to connection menu
       6) Back to main menu
 
-11) Update Table
-12) List Tables
-13) Back to main menu
+6) Update Table:
+7) List Tables:
+   - Either lists all tables if any exist or tells the user that none exist.
+8) Back to main menu
 
