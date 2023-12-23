@@ -41,7 +41,7 @@ To run:
      5) Back to main menu
      6) Exit
 5) Delete from Table
-    - It lists tables inside the database for the user to choose from and then shows the next menu:
+    - It lists tables inside the database for the user to choose from if any exist or tells the user that no tables were created. Then shows the next menu:
       1) Delete by Id: takes the value for the primary key to delete the whole record. If it does not exist, it tells the user that the id does not exist.	    
       2) Delete by a Column Value: 
       3) Drop a Column	     
@@ -50,6 +50,11 @@ To run:
       6) Back to main menu
 
 6) Update Table:
+   - It lists tables inside the database for the user to choose from if any exist or tells the user that no tables were created. 
+   - If a table is selected and has no entries, it will inform the user.
+   - If a table is selected and it has entries (records), it asks the user to enter the id of the record they want to modify or enter q if they want to exit.
+   - If they entered an id, it will ask for the column they want to modify and take the corresponding value.
+   - it applies unique and datatypes check same as the insert.
 7) List Tables:
    - Either lists all tables if any exist or tells the user that none exist.
 8) Back to main menu
