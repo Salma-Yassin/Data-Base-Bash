@@ -42,12 +42,12 @@ To run:
      6) Exit
 9) Delete from Table
     - It lists tables inside the database for the user to choose from and then shows the next menu:
-    1) Delete by Id: takes the value for the primary key to delete the whole record. If it does not exist, it tells the user that the id does not exist.	    
-    2) Delete by a Column Value: 
-    3) Drop a Column	     
-    4) Delete All
-    5) Back to connection menu
-    6) Back to main menu
+      1) Delete by Id: takes the value for the primary key to delete the whole record. If it does not exist, it tells the user that the id does not exist.	    
+      2) Delete by a Column Value: 
+      3) Drop a Column	     
+      4) Delete All
+      5) Back to connection menu
+      6) Back to main menu
 
 11) Update Table
 12) List Tables
