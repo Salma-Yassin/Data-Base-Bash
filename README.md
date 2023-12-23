@@ -13,7 +13,7 @@ To run:
 ## Supported functionalities:
 
 ### Main Menu
-1) Create DB: does not allow the creation of duplicate databases (checks that the user hasn't created a database with the same name before), and handles whitespace in the name of the database.
+1) Create DB: does not allow the creation of duplicate databases (checks that the user hasn't created a database with the same name before), and handles whitespace in the name of the database. It ensures that the name only starts with letters and only contains alphamumeric and underscore.
 2) List DB: either lists existing databases if any exist or tells the user that no databases exist. 	
 3) Drop DB: delete the database, it asks for user confirmation to avoid deletion by mistake.
 4) Connect to DB: asks the user to choose a database to connect to if any exists then opens the Table Menu. It asks the user to create a database if none exists. 
@@ -21,13 +21,13 @@ To run:
 
 ### Table Menu:
 1) Create Table:
-   - Asks for the table name, checks if it is unique, and that no table inside this database has the same name. It does not allow whitespace in the middle but gives the user the option to replace whitespace, it aborts table creation if the user refuses.
+   - Asks for the table name, checks if it is unique, and that no table inside this database has the same name. It ensures that the name follows the naming rules. It does not allow whitespace in the middle but gives the user the option to replace whitespace, it aborts table creation if the user refuses.
    - Takes the number of fields and checks that it is an integer.
    - For each field (Column), it takes the name of the field and checks that it is unique inside this table, the name has to be two characters at least and start with a letter.
    - For each field, it asks for the datatype: String or Integer. It does not allow the user to create a table without properly setting these options.
    - The first field created is the primary key and the unique constraint is applied to this field.
 2) Drop Table:
-   - it shows the user a list of existing databases to delete, and delete the chosen table, it asks for user confirmation to avoid deletion by mistake.	If the user chooses an option that does not exist in the list, it will show an Invalid Option.        
+   - It shows the user a list of existing databases to delete, and delete the chosen table, it asks for user confirmation to avoid deletion by mistake.	If the user chooses an option that does not exist in the list, it will show an Invalid Option.        
 3) Insert into Table 
     - It shows a list of existing tables for the user to choose from and handles invalid user selection.
     - Before each insertion, it checks the primary key constraint for the first field. 
