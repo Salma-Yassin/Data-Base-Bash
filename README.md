@@ -43,9 +43,9 @@ To run:
 5) Delete from Table
     - It lists tables inside the database for the user to choose from if any exist or tells the user that no tables were created. Then shows the next menu:
       1) Delete by Id: takes the value for the primary key to delete the whole record. If it does not exist, it tells the user that the id does not exist.	    
-      2) Delete by a Column Value: 
-      3) Drop a Column	     
-      4) Delete All
+      2) Delete by a Column Value: specify a column value and then delete all records that match this value in the chosen column. 
+      3) Drop a Column: it deletes a whole column. it shows the user a list of columns to choose from, except primary key, and then deletes this column from all records.	     
+      4) Delete All: it deletes all records inside the table, it asks for user confirmation to avoid deletion by mistake.
       5) Back to connection menu
       6) Back to main menu
 
