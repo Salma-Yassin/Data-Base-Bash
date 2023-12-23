@@ -31,10 +31,17 @@ To run:
 5) Insert into Table 
     - It shows a list of existing tables for the user to choose from and handles invalid user selection.
     - Before each insertion, it checks the primary key constraint for the first field. 
-    - Before each insertion, it checks that all integer fields have numeric values and that all string fields has non-empty values.
+    - Before each insertion, it checks that all integer fields have numeric values and that all string fields have non-empty values.
 7) select from Table
-8) Delete from Table
-9) Update Table
-10) List Tables
-11) Back to main menu
+   - It lists tables inside the database for the user to choose from and then shows the next menu:
+     1) Select all: shows column names and all existing records.		    
+     2) Select a column: shows a list of column names for the user to choose from and when the user chooses a valid option it shows all values inside the corresponding column.	    
+     3) Select by a column value: shows all records (the whole record) that match a given value entered by the user for a given column. It first lists all existing columns for the user to choose from and then asks for a value to match inside this column, it will either return the matched columns or that the value does not exist.
+     4) Back to connection menu
+     5) Back to main menu
+     6) Exit
+9) Delete from Table
+10) Update Table
+11) List Tables
+12) Back to main menu
 
