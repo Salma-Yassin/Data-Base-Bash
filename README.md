@@ -2,6 +2,9 @@
 
 A Database Engine created using bash scripts.
 
+## Contributors:
+Salma Mahran Yassin: @salma-yassin
+Laila Hamdy Masoud: @lailahamdy
 ## To run:
 
 - Please add the project folder path to the environment variables.
