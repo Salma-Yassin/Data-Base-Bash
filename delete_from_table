@@ -1,0 +1,113 @@
+#! /usr/bin/bash
+PS3="Choose a delete option >> "
+fields_names=($(awk -F: '{print $1}' $2))
+
+if [ -s "$1" ]; then
+    select  variable2 in "Delete by Id" "Delete by a Column Value" "Drop a Column" "Delete All" "Back to connection menu" "Back to main menu"
+    do
+        case $REPLY in
+            1) # Delete by id 
+                read -p "Enter id value to delete: " delet_value
+                line_number=$(awk -F: -v delet_value="$delet_value" 'BEGIN{line_number=0}{
+                    if($1 == delet_value)
+                    {
+                        line_number = NR
+                    }
+                }END {print line_number}' $1)
+                if [[ $line_number == 0 ]]; then
+                    echo "The id you entered does not exist!"
+                else
+                    awk -v line_number="$line_number" '{
+                        if(NR != line_number)
+                        {
+                            print $0 
+                        }}' $1 > temp_file && mv temp_file $1
+                    echo "The record has been deleted."
+                fi 
+                source delete_from_table
+            ;;
+            2) #Delete by a column value
+                PS3="Choose a Column to delete from: "
+                select column_name in ${fields_names[@]:1}
+                do
+                    if [[ $REPLY =~ ^[1-9]$ && $((REPLY+1)) -le ${#fields_names[@]} ]]; then
+                    read -p "Enter value to delete: " delete_value
+                    line_number=$(awk -F: -v col="$((REPLY+1))" -v delete_value="$delete_value" 'BEGIN{line_number=0}{
+                            if($col == delete_value)
+                            {
+                                line_number = NR
+                                exit
+                            }}END {print line_number}' $1)
+                        if [[ $line_number == 0 ]]; then
+                            echo "The value you entered does not exist!"
+                        else
+                            awk -F: -v col="$((REPLY+1))" -v delete_value="$delete_value" '{
+                                if($col != delete_value)
+                                {
+                                    print $0
+                                }
+                            }' $1 > temp_file && mv temp_file $1
+                            echo "Matched entries have been deleted!"     
+                        fi 
+                        source delete_from_table
+                    else
+                        source delete_from_table
+                    fi
+                done
+                PS3="Choose a delete option >> "
+            ;;
+            3) #Drop a column
+            PS3="Choose a Column to delete from: "
+                select column_name in ${fields_names[@]:1}
+                do
+                    if [[ $REPLY =~ ^[1-9]$ && $((REPLY+1)) -le ${#fields_names[@]} ]]; then
+                        if [ -n "$column_name" ]; then
+                            awk -F: -v OFS=: -v col="$((REPLY+1))" '{
+                                $col=""
+                                for (i=col; i<NF; i++) {
+                                    $i=$(i+1)
+                                }
+                                NF--
+                                print $0
+                            }' "$1" > temp_file && mv temp_file "$1"
+                            awk -v line_number="$((REPLY+1))" '{
+                                if(NR != line_number)
+                                {
+                                    print $0 
+                                }}' $2 > temp_file && mv temp_file $2
+                            echo "The column has been dropped."
+                            source delete_from_table
+                        fi
+                    else
+                        source delete_from_table
+                    fi
+                done
+                PS3="Choose a delete option >> "
+            ;;
+            4) # Delete All 
+                read -p "Sure you want to delete all entries?[Y/N] " delete_value
+                if [[ $delete_value =~ [Yy] ]]; then
+                    echo -n > $1
+                    echo "All entries have been deleted! "
+                    source delete_from_table
+                else
+                    echo "Aborted!"
+                    source delete_from_table
+                fi
+                ;;
+            5) #Back to connection menu
+            source table_menue
+            ;;
+            6) #Back to main menu
+            cd ..
+            source main_menu
+            ;;
+            *)
+            source table_menue
+            ;;
+        esac
+    done 
+else
+    echo "Table has no entries"
+    source table_menue
+fi

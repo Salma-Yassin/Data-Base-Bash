@@ -1,0 +1,107 @@
+#! /usr/bin/bash
+: '
+Select * (done)
+Select by column value
+Select entire column (done)
+Select with a where condition (<>) (Bonus)
+'
+
+#1 data file
+#2 meta file
+fields_types=($(awk -F: '{print $2}' $2)) #$2 carries the meta file path, so awk operates on it
+fields_names=($(awk -F: '{print $1}' $2))
+
+check_validity() {
+    input=$1
+    valid_options=("$@")
+
+    while true; do
+        for option in "${valid_options[@]}"; do
+            if [ "$input" == "$option" ]; then
+                return  
+            fi
+        done
+
+        read -p "Please enter a valid option: " input
+    done
+}
+#$1 -> table data
+#$2 -> meta data
+select option in "Select all" "Select a column" "Select by a column value" "Back to connection menu" "Back to main menu" "Exit"
+do
+case $REPLY in
+        1) #Select all 
+        if [ -s "$1" ]; then
+            echo "${fields_names[@]}"
+            cat "$1"
+            source select_table
+        else
+            echo "Table has no entries"
+            source select_table
+
+        fi
+        ;;
+        2) #Select entire column
+        echo "Please choose which column to select." 
+        select column_name in "${fields_names[@]}"; do
+            if [[ $REPLY =~ ^[0-9]+$ && $REPLY -ge 1 && $REPLY -le ${#fields_names[@]} ]]; then
+                selected_column=$(awk -F: -v col="$REPLY" '{print $col}' "$1")
+            if [ -z "$selected_column" ]; then
+                echo "Table has no entries."
+                source select_table
+                else
+                    echo "${fields_names[$((REPLY-1))]}"
+                    echo "$selected_column"
+                    source select_table
+                    break
+                fi
+            else
+                echo "Invalid choice. Please enter a valid number."
+            fi
+        done
+        ;;
+        3) #Select by a column value
+            select column_name in ${fields_names[@]}
+                do
+                    if [[ $REPLY =~ ^[1-9]$ && $((REPLY)) -le ${#fields_names[@]} ]]; then
+                    read -p "Enter value to match the records: " select_value
+                    line_number=$(awk -F: -v col="$((REPLY))" -v select_value="$select_value" 'BEGIN{line_number=0}{
+                            if($col == select_value)
+                            {
+                                line_number = NR
+                                exit
+                            }}END {print line_number}' $1)
+                        if [[ $line_number == 0 ]]; then
+                            echo "The value you entered does not exist!"
+                        else
+                            echo ${fields_names[@]} 
+                            awk -F: -v col="$((REPLY))" -v select_value="$select_value" '
+                            {
+                                if($col == select_value)
+                                {
+                                    print $0
+                                }
+                            }' $1 
+                        source select_table
+                        fi 
+                    else
+                        echo "Invalid choice."
+                        source select_table
+                    fi
+                    source select_table
+        done
+        ;;
+        4)
+        source table_menue
+        ;;
+        5)
+        cd ..
+        source main_menu
+        ;;
+        6)
+        exit
+        ;;
+        *)
+        source select_table
+esac
+done

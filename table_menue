@@ -1,0 +1,135 @@
+#! /usr/bin/bash
+PS3="Choose an Option >> "
+select  variable2 in "Create Table" "Drop Table" "Insert into Table" "select from Table" "Delete from Table" "Update Table" "List Tables" "Back to main menu" 
+do
+    case $REPLY in
+        1) # "Create Table"
+            source create_table
+        ;;
+        2) # "Drop Table"
+            output=$(ls -F | grep -v /)
+            if [ -n "$output" ]; then
+                select option in $(ls -F | grep -v /); do
+                    if [ -n "$option" ]; then
+                        table_name="$option"
+                        read -p "Do you want to delete $table_name (y/n)? " ans
+                        if [[ "$ans" =~ ^[yY]$ ]]; then
+                            rm $table_name .meta_$table_name
+                            echo "Table deleted"
+                            source table_menue
+                        else 
+                            echo "Nothing deleted."
+                            source table_menue
+                        fi
+                    else
+                        echo "Invalid selection."
+                        source table_menue
+                    fi
+                done
+            else
+                echo "No Tables Created"
+                source table_menue
+            fi
+        ;; 
+        3) # "Insert into Table" 
+            output=$(ls -F | grep -v /)
+            if [ -n "$output" ]; then
+                echo "Please choose which table to insert into."
+                select option in $(ls -F | grep -v /)
+                do 
+                    if [ -n "$option" ]; then
+                        source insert_table $option .meta_$option
+                    else
+                        echo "Invalid selection."
+                        source table_menue
+                        # break
+                    fi
+                done
+                source table_menue
+            else
+                echo "No Tables Created"
+                source table_menue
+            fi
+        ;;
+        4) #Select from table
+
+            output=$(ls -F | grep -v /)
+            if [ -n "$output" ]; then
+                echo "Please choose which table to select from."
+                select option in $(ls -F | grep -v /)
+                do 
+                    if [ -n "$option" ]; then
+                        source select_table $option .meta_$option
+                    else
+                        echo "Invalid selection."
+                        source table_menue
+                    fi
+                done
+            else
+                echo "No Tables Created"
+                source table_menue
+            fi
+        ;;
+        5) # Delete from a table 
+        
+            output=$(ls -F | grep -v /)
+            if [ -n "$output" ]; then
+                echo "Please choose which table to delete from."
+                select option in $(ls -F | grep -v /)
+                do 
+                    if [ -n "$option" ]; then
+                        source delete_from_table $option .meta_$option
+                    else
+                        echo "Invalid selection."
+                        source table_menue
+                        break
+                    fi
+                    PS3="Choose an Option >> "
+                done
+                source table_menue
+            else
+                echo "No Tables Created"
+                source table_menue
+            fi
+        ;;
+        6) # update table 
+            output=$(ls -F | grep -v /)
+            if [ -n "$output" ]; then
+                echo "Please choose which table to update."
+                select option in $(ls -F | grep -v /)
+                do 
+                    if [ -n "$option" ]; then
+                        source update_table $option .meta_$option
+                    else
+                        echo "Invalid selection."
+                        source table_menue
+                        break
+                    fi
+                done
+            else
+                echo "No Tables Created"
+                source table_menue
+            fi
+        ;;
+        7) # "List Tables" 
+            output=$(ls -F | grep -v /)
+            if [ -n "$output" ]; then
+                echo "Existing Tables are: "
+                ls -F | grep -v /
+                source table_menue
+            else
+                echo "No Tables Created"
+                source table_menue
+            fi
+        ;;
+        8) #Back to main menu
+            cd .. 
+            source main_menu 
+        ;;
+        *)
+            echo "Invalid option, you are back to main menu."
+            cd ..
+            source main_menu
+        break
+    esac
+done 
