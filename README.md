@@ -13,7 +13,7 @@ A Database Engine created using bash scripts.
 ## Supported functionalities:
 
 ### Main Menu
-1) Create DB: does not allow the creation of duplicate databases (checks that the user hasn't created a database with the same name before), and handles whitespace in the name of the database. It ensures that the name only starts with letters and only contains alphamumeric and underscore.
+1) Create DB: does not allow the creation of duplicate databases (checks that the user hasn't created a database with the same name before), and handles whitespace in the name of the database. It ensures that the name only starts with letters and only contains alphanumeric and underscore.
 2) List DB: either lists existing databases if any exist or tells the user that no databases exist. 	
 3) Drop DB: delete the database, it asks for user confirmation to avoid deletion by mistake.
 4) Connect to DB: asks the user to choose a database to connect to if any exists then opens the Table Menu. It asks the user to create a database if none exists. 
